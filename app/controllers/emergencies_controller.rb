@@ -1,5 +1,6 @@
 class EmergenciesController < ApplicationController
-  before_action :set_emergency, only: [ :show, :update ]
+  before_action :set_emergency, only: [:show, :update]
+
   def index
     @emergencies = Emergency.all
 
@@ -10,7 +11,7 @@ class EmergenciesController < ApplicationController
     if @emergency
       render json: @emergency
     else
-      raise ActiveRecord::RecordNotFound
+      fail ActiveRecord::RecordNotFound
     end
   end
 

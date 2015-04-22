@@ -6,6 +6,7 @@ class ApplicationController < ActionController::Base
   rescue_from ActionController::UnpermittedParameters, with: :unpermitted_params
 
   private
+
   def not_found
     render file: File.join(Rails.root, 'public', '404.json'), status: :not_found
   end

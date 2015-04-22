@@ -1,5 +1,5 @@
 class RespondersController < ApplicationController
-  before_action :set_responder, only: [ :show, :update ]
+  before_action :set_responder, only: [:show, :update]
 
   def index
     @responders = Responder.all
@@ -11,7 +11,7 @@ class RespondersController < ApplicationController
     if @responder
       render json: @responder, status: :ok
     else
-      raise ActiveRecord::RecordNotFound
+      fail ActiveRecord::RecordNotFound
     end
   end
 

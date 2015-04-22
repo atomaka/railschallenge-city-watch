@@ -12,6 +12,4 @@ Rails.application.configure do
   config.generators do |g|
     g.assets false
   end
-
-  config.action_controller.action_on_unpermitted_parameters = :raise
 end

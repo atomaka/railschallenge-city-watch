@@ -4,40 +4,32 @@ class Dispatcher
   end
 
   def dispatch
-    types.each do |type, severity|
+    types.keys.each do |type|
       assign_responders(type)
     end
-    if @emergency.capacity_met?
-      @emergency.full_response = true
-      @emergency.save
-    end
+
+    set_full_response if @emergency.capacity_met?
   end
 
   private
 
   def assign_responders(type)
-    required_capacity = @emergency.send(types[type])
-    available = Responder.available_on_duty(type).order(capacity: :desc)
-    current_capacity = available.sum(:capacity)
+    required_capacity = capacity(type)
+    available = Responder.available_on_duty(type).by_capacity
+    current_capacity = available.capacity_sum
 
-    if(required_capacity == 0 || current_capacity == 0)
-      return
-    end
+    return if required_capacity == 0 || current_capacity == 0
 
     available.each do |responder|
-      if required_capacity == 0
-        break
-      end
-      if responder.capacity <= required_capacity
-        @emergency.responders << responder
-        available.delete(responder)
-        required_capacity -= responder.capacity
-      end
+      break if required_capacity == 0
+      next unless responder.capacity <= required_capacity
+
+      add_responder(responder)
+      available.delete(responder)
+      required_capacity -= responder.capacity
     end
 
-    if required_capacity > 0
-      @emergency.responders << available.last
-    end
+    @emergency.responders << available.last if required_capacity > 0
   end
 
   def types
@@ -46,5 +38,18 @@ class Dispatcher
       'Police'  => :police_severity,
       'Medical' => :medical_severity
     }
+  end
+
+  def set_full_response
+    @emergency.full_response = true
+    @emergency.save
+  end
+
+  def add_responder(responder)
+    @emergency.responders << responder
+  end
+
+  def capacity(type)
+    @emergency.send(types[type])
   end
 end

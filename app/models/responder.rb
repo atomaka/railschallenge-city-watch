@@ -13,4 +13,6 @@ class Responder < ActiveRecord::Base
   scope :available, ->(type) { where(type: type, emergency_code: nil) }
   scope :on_duty, ->(type) { where(type: type, on_duty: true) }
   scope :available_on_duty, ->(type) { where(type: type, emergency_code: nil, on_duty: true) }
+  scope :by_capacity, ->() { order(capacity: :desc) }
+  scope :capacity_sum, -> () { sum(:capacity) }
 end

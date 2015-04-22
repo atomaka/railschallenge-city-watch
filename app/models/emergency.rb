@@ -23,7 +23,7 @@ class Emergency < ActiveRecord::Base
   end
 
   def required_capacity
-    types.map { |key, value| send(value) }.sum || 0
+    types.values.map { |value| send(value) }.sum || 0
   end
 
   def types
@@ -35,12 +35,10 @@ class Emergency < ActiveRecord::Base
   end
 
   def resolve
-    if resolved_at_changed?
-      responders.clear
-    end
+    responders.clear if resolved_at_changed?
   end
 
   def self.stats
-    [ full_response.count, all.count ]
+    [full_response.count, all.count]
   end
 end

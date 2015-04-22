@@ -5,6 +5,8 @@ gem 'sqlite3', '1.3.10'
 
 gem 'jbuilder', '~> 2.0'
 
+gem 'active_model_serializers', '~> 0.8.0'
+
 group :development, :test do
   gem 'rubocop', '0.30.0'
   gem 'minitest-rails', '~> 2.1.1'

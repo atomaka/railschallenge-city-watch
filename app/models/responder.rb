@@ -8,4 +8,8 @@ class Responder < ActiveRecord::Base
   validates :type,     presence: true
 
   belongs_to :emergency
+
+  def emergency_code
+    nil
+  end
 end

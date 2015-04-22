@@ -25,13 +25,18 @@ class Dispatcher
     end
 
     available.each do |responder|
+      if required_capacity == 0
+        break
+      end
       if responder.capacity <= required_capacity
-        if required_capacity <= 0
-          break
-        end
         @emergency.responders << responder
+        available.delete(responder)
         required_capacity -= responder.capacity
       end
+    end
+
+    if required_capacity > 0
+      @emergency.responders << available.last
     end
   end
 

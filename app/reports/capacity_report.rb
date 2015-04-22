@@ -11,10 +11,10 @@ class CapacityReport
 
   def self.capacity(type)
     [
-      Responder.total_responders(type),
-      Responder.unavailable_responders(type),
-      Responder.on_duty_responders(type),
-      Responder.available_responders(type)
+      Responder.total(type).sum(:capacity),
+      Responder.available(type).sum(:capacity),
+      Responder.on_duty(type).sum(:capacity),
+      Responder.available_on_duty(type).sum(:capacity)
     ]
   end
 end

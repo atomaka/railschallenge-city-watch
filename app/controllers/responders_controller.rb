@@ -2,9 +2,11 @@ class RespondersController < ApplicationController
   before_action :set_responder, only: [:show, :update]
 
   def index
-    @responders = Responder.all
-
-    render json: @responders
+    if params[:show] == 'capacity'
+      render json: CapacityReport.generate
+    else
+      render json: Responder.all
+    end
   end
 
   def show

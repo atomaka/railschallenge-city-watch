@@ -1,20 +1,19 @@
 class CapacityReport
   def self.generate
-    {
-      'capacity': {
-        'Fire': capacity('Fire'),
-        'Police': capacity('Police'),
-        'Medical': capacity('Medical')
-      }
-    }
+    capacity = {}
+    Responder.types.keys.each do |type|
+      capacity[type] = capacity(type)
+    end
+
+    { 'capacity': capacity }
   end
 
   def self.capacity(type)
     [
-      Responder.total(type).sum(:capacity),
-      Responder.available(type).sum(:capacity),
-      Responder.on_duty(type).sum(:capacity),
-      Responder.available_on_duty(type).sum(:capacity)
+      Responder.total(type).capacity_sum,
+      Responder.available(type).capacity_sum,
+      Responder.on_duty(type).capacity_sum,
+      Responder.available_on_duty(type).capacity_sum
     ]
   end
 end

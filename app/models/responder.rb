@@ -15,4 +15,12 @@ class Responder < ActiveRecord::Base
   scope :available_on_duty, ->(type) { where(type: type, emergency_code: nil, on_duty: true) }
   scope :by_capacity, ->() { order(capacity: :desc) }
   scope :capacity_sum, -> () { sum(:capacity) }
+
+  def self.types
+    {
+      'Fire'    => :fire_severity,
+      'Police'  => :police_severity,
+      'Medical' => :medical_severity
+    }
+  end
 end

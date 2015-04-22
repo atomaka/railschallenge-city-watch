@@ -4,7 +4,7 @@ class Dispatcher
   end
 
   def dispatch
-    types.keys.each do |type|
+    Responder.types.keys.each do |type|
       assign_responders(type)
     end
 
@@ -32,14 +32,6 @@ class Dispatcher
     @emergency.responders << available.last if required_capacity > 0
   end
 
-  def types
-    {
-      'Fire'    => :fire_severity,
-      'Police'  => :police_severity,
-      'Medical' => :medical_severity
-    }
-  end
-
   def set_full_response
     @emergency.full_response = true
     @emergency.save
@@ -50,6 +42,6 @@ class Dispatcher
   end
 
   def capacity(type)
-    @emergency.send(types[type])
+    @emergency.send(Responder.types[type])
   end
 end

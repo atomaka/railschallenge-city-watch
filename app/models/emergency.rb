@@ -23,15 +23,7 @@ class Emergency < ActiveRecord::Base
   end
 
   def required_capacity
-    types.values.map { |value| send(value) }.sum || 0
-  end
-
-  def types
-    {
-      'Fire'    => :fire_severity,
-      'Police'  => :police_severity,
-      'Medical' => :medical_severity
-    }
+    Responder.types.values.map { |value| send(value) }.sum || 0
   end
 
   def resolve

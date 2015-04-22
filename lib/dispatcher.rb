@@ -7,6 +7,10 @@ class Dispatcher
     types.each do |type, severity|
       assign_responders(type)
     end
+    if @emergency.capacity_met?
+      @emergency.full_response = true
+      @emergency.save
+    end
   end
 
   private

@@ -9,4 +9,30 @@ class Emergency < ActiveRecord::Base
                                numericality: { greater_than_or_equal_to: 0 }
 
   has_many :responders, foreign_key: :emergency_code, primary_key: :code
+
+  scope :full_response, ->() { where(full_response: true) }
+
+  def capacity_met?
+    responder_count >= required_capacity
+  end
+
+  def responder_count
+    responders.sum(:capacity)
+  end
+
+  def required_capacity
+    types.map { |key, value| send(value) }.sum || 0
+  end
+
+  def types
+    {
+      'Fire'    => :fire_severity,
+      'Police'  => :police_severity,
+      'Medical' => :medical_severity
+    }
+  end
+
+  def self.stats
+    [ full_response.count, all.count ]
+  end
 end

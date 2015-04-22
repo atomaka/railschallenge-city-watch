@@ -3,8 +3,9 @@ class EmergenciesController < ApplicationController
 
   def index
     @emergencies = Emergency.all
+    stats = Emergency.stats
 
-    render json: @emergencies
+    render json: @emergencies, meta: stats, meta_key: 'full_responses'
   end
 
   def show

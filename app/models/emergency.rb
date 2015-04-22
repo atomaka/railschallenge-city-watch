@@ -12,6 +12,8 @@ class Emergency < ActiveRecord::Base
 
   scope :full_response, ->() { where(full_response: true) }
 
+  after_update :resolve
+
   def capacity_met?
     responder_count >= required_capacity
   end
@@ -30,6 +32,12 @@ class Emergency < ActiveRecord::Base
       'Police'  => :police_severity,
       'Medical' => :medical_severity
     }
+  end
+
+  def resolve
+    if resolved_at_changed?
+      responders.clear
+    end
   end
 
   def self.stats

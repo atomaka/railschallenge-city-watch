@@ -14,20 +14,48 @@ class Emergency < ActiveRecord::Base
 
   after_update :resolve
 
-  def capacity_met?
-    responder_count >= required_capacity
+  def complete_response
+    update(full_response: true)
   end
 
-  def responder_count
+  def capacity_met?
+    total_responder_count >= total_required_capacity
+  end
+
+  def total_responder_count
     responders.sum(:capacity)
   end
 
-  def required_capacity
+  def total_required_capacity
     Responder.types.values.map { |value| send(value) }.sum || 0
+  end
+
+  def responder_count(type)
+    responders.select { |r| r.type == type }.map(&:capacity).sum
+  end
+
+  def required_capacity(type)
+    send(Responder.types[type])
+  end
+
+  def current_required_capacity(type)
+    send(Responder.types[type]) - responder_count(type)
+  end
+
+  def responder_too_large?(type, responder)
+    responder.capacity > current_required_capacity(type)
+  end
+
+  def responders_needed?(type)
+    current_required_capacity(type) > 0
   end
 
   def resolve
     responders.clear if resolved_at_changed?
+  end
+
+  def add_responder(responder)
+    responders << responder unless responders.include?(responder)
   end
 
   def self.stats

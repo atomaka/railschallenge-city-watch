@@ -23,7 +23,7 @@ class EmergenciesController < ApplicationController
       Dispatcher.new(@emergency).dispatch
       render json: @emergency, status: :created
     else
-      render json: { message: @emergency.errors.messages }, status: :unprocessable_entity
+      unprocessable_entity(@emergency.errors.messages)
     end
   end
 
@@ -31,7 +31,7 @@ class EmergenciesController < ApplicationController
     if @emergency.update(update_params)
       render json: @emergency, status: :ok
     else
-      render json: { message: @emergency.errors.messages }, status: :unprocessable_entity
+      unprocessable_entity(@emergency.errors.messages)
     end
   end
 

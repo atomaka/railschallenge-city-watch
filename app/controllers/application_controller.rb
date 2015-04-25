@@ -12,6 +12,10 @@ class ApplicationController < ActionController::Base
   end
 
   def unpermitted_params(exception)
-    render json: { message: exception.message }, status: :unprocessable_entity
+    unprocessable_entity(exception.message)
+  end
+
+  def unprocessable_entity(errors)
+    render json: { message: errors }, status: :unprocessable_entity
   end
 end

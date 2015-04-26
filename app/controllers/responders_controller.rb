@@ -23,7 +23,7 @@ class RespondersController < ApplicationController
     if @responder.save
       render json: @responder, status: :created
     else
-      unprocessable_entity(@responder.errors.messages)
+      render_unprocessable_entity(@responder.errors.messages)
     end
   end
 
@@ -31,7 +31,7 @@ class RespondersController < ApplicationController
     if @responder.update(update_params)
       render json: @responder, status: :ok
     else
-      unprocessable_entity(@responder.errors.messages)
+      render_unprocessable_entity(@responder.errors.messages)
     end
   end
 

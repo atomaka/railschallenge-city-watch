@@ -1,5 +1,7 @@
 class ErrorsController < ApplicationController
   def catch_404
-    not_found
+    # rubocop violation on following exception
+    # fail ActionController::RoutingError.new(params[:path])
+    render_not_found
   end
 end

@@ -17,7 +17,7 @@ class Dispatcher
     available = Responder.sorted_available_on_duty(type)
 
     return unless @emergency.responders_needed?(type)
-    return if responders_available?(available)
+    return unless responders?(available)
 
     available.each do |responder|
       break unless @emergency.responders_needed?(type)
@@ -30,7 +30,7 @@ class Dispatcher
     @emergency.add_responder(available.last) if @emergency.responders_needed?(type)
   end
 
-  def responders_available?(available)
-    available.size == 0
+  def responders?(available)
+    available.size > 0
   end
 end
